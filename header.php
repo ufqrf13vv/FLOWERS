@@ -19,11 +19,7 @@
                     'theme_location'  => 'main-menu'
                 ));
                 ?>
-<!--                --><?php //the_widget( 'WP_Widget_Search' ); ?>
-<!--                <form class="search">-->
-<!--                    <input class="search__input" type="text">-->
-<!--                    <input class="search__submit" type="submit">-->
-<!--                </form>-->
+                <?php the_widget( 'WP_Widget_Search' ); ?>
                 <div class="cart">
                     <div class="cart__img"></div><span class="cart__total"><?php echo WC()->cart->cart_contents_total; ?> РУБ.</span>
                     <?php
