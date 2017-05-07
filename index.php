@@ -1,130 +1,121 @@
 <?php get_header(); ?>
 
-<!-- Главный слайдер -->
-<!--<div class="main-slider">-->
-<!--	--><?php //echo do_shortcode('[smartslider3 slider=2]');	?>
-<!--</div>-->
+	<!-- Главный слайдер -->
+<?php
+$products = new WP_Query( array(
+	'tax_query' => array(
+		'relation' => 'AND',
+		array(
+			'taxonomy' => 'pa_main-slider',
+			'field'    => 'slug',
+			'terms'    => 'in',
+		),
+		array(
+			'taxonomy' => 'pa_slide',
+			'field'    => 'slug',
+			'terms'    => array( 'blue', 'pink', 'yellow' ),
+			'operator' => 'IN',
+		)
+	),
+	'post_type' => 'product',
+	'posts_per_page' => -1
+) );
+?>
 
-<!-- Описание -->
-<div class="description" id="product">
-	<div class="container">
-		<div class="description__wrapper">
-			<div class="description__block">
-				<div class="description__header">
-					<div class="description__logo"><img src="<?php echo get_template_directory_uri(); ?>/img/bksblue-logo.png"></div>
-					<div class="description__title"><?php echo get_cat_name(2); ?></div>
-				</div>
-				<div class="description__features">
-					<?php
-					if ( have_posts() ) :
-						query_posts('cat=2&order=ASC');
-						while (have_posts()) : the_post(); ?>
-						<div class="description__feature">
-							<div class="description__feature-icon">
-								<?php echo get_the_post_thumbnail( null ); ?>
-							</div>
-							<div class="description__feature-text"><?php the_content(); ?></div>
-						</div>
-						<?php endwhile;
-							endif;
-							wp_reset_query(); ?>
-				</div>
-				<div class="description__subtitle"> <span>Подходит для:</span></div>
-				<div class="description__examples">
-					<?php
-						$upload_dir = wp_upload_dir();
+<div class="main-slider">
 
-						$query = 'select id, name, preview_image from wp_bwg_gallery';
-						$result = $wpdb->get_results($query);
-
-						for ($i = 0; $i < 4; $i++) { ?>
-							<div class="description__example">
-								<div class="description__example-image">
-									<img src="<?php echo $upload_dir['baseurl']; ?>/photo-gallery<?php echo $result[$i]->preview_image; ?>">
-								</div>
-								<div class="description__example-title"><?php echo $result[$i]->name; ?></div>
-								<?php $nonce = wp_create_nonce("my_user_vote_nonce"); ?>
-								<a class="description__example-link" href="" data-nonce="<?php echo $nonce; ?>" data-gallery_id="<?php echo $result[$i]->id; ?>">Посмотреть</a>
-							</div>
-					<?php
-						}
-					?>
-				</div>
-				<a class="description__cost" href="#">Рассчитать стоимость</a>
-			</div>
-			<div class="description__block">
-				<div class="description__header">
-					<div class="description__logo"><img src="<?php echo get_template_directory_uri(); ?>/img/jokko-logo.png"></div>
-					<div class="description__title"><?php echo get_cat_name(3); ?></div>
-				</div>
-				<div class="description__features">
-					<?php
-					if ( have_posts() ) :
-						query_posts('cat=3&order=ASC');
-						while (have_posts()) : the_post(); ?>
-							<div class="description__feature">
-								<div class="description__feature-icon">
-									<?php echo get_the_post_thumbnail( null ); ?>
-								</div>
-								<div class="description__feature-text"><?php the_content(); ?></div>
-							</div>
-						<?php endwhile;
-					endif;
-					wp_reset_query(); ?>
-				</div>
-				<div class="description__subtitle"> <span>Подходит для:</span></div>
-				<div class="description__examples">
+<?php
+foreach ($products->posts as $post) { ?>
+	<div class="main-slider__slide <?php echo bg_color($post->ID); ?>">
+		<div class="container">
+			<div class="main-slider__wrapper">
+				<div class="main-slider__img">
 				<?php
-						for ($i = 4; $i < 8; $i++) { ?>
-							<div class="description__example">
-								<div class="description__example-image">
-									<img src="<?php echo $upload_dir['baseurl']; ?>/photo-gallery<?php echo $result[$i]->preview_image; ?>">
-								</div>
-								<div class="description__example-title"><?php echo $result[$i]->name; ?></div>
-								<?php $nonce = wp_create_nonce("my_user_vote_nonce"); ?>
-								<a class="description__example-link" href="" data-nonce="<?php echo $nonce; ?>" data-gallery_id="<?php echo $result[$i]->id; ?>">Посмотреть</a>
-							</div>
-					<?php
-						}
-					?>
-				</div>
-				<a class="description__cost" href="#">Рассчитать стоимость</a>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- Галерея -->
-<?php echo do_shortcode('[gallery-slider]');	?>
-
-<div class="about-company" id="company">
-	<div class="container">
-		<div class="about-company__wrapper">
-			<?php $posts = get_posts(array(
-					'category' => 1,
-					'post_type' => 'post'
-				));
-				foreach ($posts as $post) { ?>
-					<div class="about-company__image">
-						<?php the_post_thumbnail(); ?>
-					</div>
-					<div class="about-company__block">
-						<?php echo $post->post_content; ?>
-					</div>
-				<?php
-				}
+				$thumb_id = get_post_thumbnail_id();
+				$thumb_url = wp_get_attachment_image_src($thumb_id, 'thumbnail-size', true);
+				$price = get_metadata('post', $post->ID, '_price', true);
+				$category = get_the_terms( $post->ID, 'product_cat' );
 				?>
+					<img src="<?php echo $thumb_url[0]; ?>" alt="<?php echo $post->post_title; ?>">
+				</div>
+				<div class="main-slider__description">
+					<div class="main-slider__header"><?php echo $post->post_title; ?></div>
+					<div class="main-slider__price"><?php echo $price; ?> РУБ.</div>
+					<div class="main-slider__links">
+						<a rel="nofollow" href="<?php echo get_category_link($category[0]->term_id) . '?add-to-cart=' . $post->ID; ?>"
+						   data-quantity="1"
+						   data-product_id="<?php echo $post->ID; ?>"
+						   data-product_sku=""
+						   class="button product_type_simple add_to_cart_button ajax_add_to_cart main-slider__link">В
+							корзину</a>
+						<a class="main-slider__link" href="javascript:void(0);">Купить в 1 клик</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+<?php
+}
+?>
+
 </div>
 
-<!-- Отзывы -->
-<?php //echo do_shortcode('[feedback-slider]'); ?>
+	<!-- Список категорий -->
+	<div class="main-categories">
+		<div class="container">
+			<h3 class="main-categories__header">Ассортимент</h3>
+			<div class="main-categories__wrapper">
+				<?php
+				$args = array(
+					'taxonomy'     => 'product_cat',
+					'orderby'      => 'name'
+				);
+				$categories = get_categories( $args);
+				$i = 0;
 
-<!-- Сертификаты -->
-<?php //echo do_shortcode('[certificate-slider]'); ?>
+				foreach ($categories as $category) :
+					if($i == 0 || $i == 4) {
+						echo '<div class="main-categories__row">';
+					}
+					?>
+						<a class="main-categories__item" href="<?php echo get_term_link( (int)$category->term_id, 'product_cat' ); ?>">
+							<div class="main-categories__img">
+								<?php $category_thumbnail  = get_woocommerce_term_meta( $category->term_id, 'thumbnail_id', true );
+								$image = wp_get_attachment_url($category_thumbnail);?>
+								<img src="<?php echo $image; ?>" alt="<?php echo $category->name; ?>">
+							</div>
+							<div class="main-categories__title <?php echo title_class($category->description); ?>"><?php echo $category->name; ?></div>
+						</a>
+					<?php
+					if($i == 3 || $i == 7) {
+						echo '</div>';
+					}
+				$i++;
+				endforeach;
+				?>
+			</div>
+		</div>
+	</div>
 
-<!-- Яндекс-карты -->
-<?php //echo do_shortcode('[yandex-map]'); ?>
+
+	<!-- Отзывы -->
+	<?php echo do_shortcode('[feedbacks-slider]');	?>
+
+<!-- Контент -->
+	<main class="content content--main">
+		<div class="container">
+			<div class="content__block content__block--main">
+				<div class="content__text">
+					<?php $post = get_post(63); ?>
+					<h2><?php echo $post->post_title; ?></h2>
+					<p><?php echo $post->post_content; ?></p>
+				</div>
+				<?php the_post_thumbnail('full', array('class' => "content__img--right")); ?>
+			</div>
+		</div>
+	</main>
+
+<!-- Новости -->
+<?php echo do_shortcode('[news-slider]');	?>
 
 <?php get_footer(); ?>

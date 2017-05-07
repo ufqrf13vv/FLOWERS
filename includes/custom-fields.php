@@ -13,23 +13,15 @@ Container::make('term_meta', 'Миниатюра')
 //  Редактируемые поля
 Container::make('theme_options', 'Редактируемые поля')
     ->add_fields([
-        Field::make('text', '_crb_phone', 'Телефон'),
-        Field::make('text', '_crb_adress', 'Адрес'),
-        Field::make('text', '_crb_email', 'Email'),
+        Field::make('text', '_crb_phone1', 'Телефон-1'),
+        Field::make('text', '_crb_phone2', 'Телефон-2'),
         Field::make('text', '_crb_footer', 'Текст футера')
     ]);
 
-Container::make('post_meta', 'Слайдер')
+Container::make('post_meta', 'Контактные данные магазинов')
     ->show_on_post_type('post')
     ->add_fields([
-        Field::make('text', '_crb_video', 'Ссылка на видео'),
-        Field::make('text', '_crb_author', 'Автор отзыва'),
-        Field::make('text', '_crb_author-post', 'Должность автора'),
-        Field::make('text', '_crb_order', 'Номер договора'),
-        Field::make('radio', '_crb_type', 'Тип слайда')
-            ->add_options([
-                'image' => 'Рисунок',
-                'video' => 'Видео',
-                'feedback' => 'Отзыв'
-            ]),
+        Field::make('text', '_crb_contact-adress', 'Адрес'),
+        Field::make('text', '_crb_contact-phone', 'Телефон'),
+        Field::make('text', '_crb_contact-email', 'Email')
     ]);

@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'Lobster';
+  src: url('Lobster.woff') format('woff'),
+       url('Lobster.ttf') format('truetype'),
+       url('Lobster.svg#Lobster') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'lobster_[allfont.ru]';
+  src: url('lobster_[allfont.ru].eot');
+  src: url('lobster_[allfont.ru].woff2') format('woff2'),
+       url('lobster_[allfont.ru].eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
