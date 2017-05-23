@@ -1,10 +1,11 @@
 <?php
-get_template_part( 'includes/gallery' );
 get_template_part( 'includes/feedback' );
 get_template_part( 'includes/shortcodes' );
 get_template_part( 'includes/wc-functions' );
 get_template_part( 'includes/helper' );
 get_template_part( 'includes/filter' );
+get_template_part( 'includes/search' );
+get_template_part( 'includes/update-cart' );
 
 //  Стили
 if(!is_admin()) {
@@ -71,3 +72,19 @@ function js_variables(){
 
 //  Удаление пустых <p></p>
 remove_filter('the_content', 'wpautop');
+
+//  Удаление лишних полей при оформлении заказа
+add_filter( 'woocommerce_checkout_fields' , 'custom_override_checkout_fields' );
+
+function custom_override_checkout_fields( $fields ) {
+    unset($fields['billing']['billing_last_name']);
+    unset($fields['billing']['billing_company']);
+    unset($fields['billing']['billing_address_2']);
+    unset($fields['billing']['billing_city']);
+    unset($fields['billing']['billing_postcode']);
+    unset($fields['billing']['billing_state']);
+    $fields['account']['account_username']['required'] = false;
+    $fields['account']['account_password']['required'] = false;
+
+    return $fields;
+}

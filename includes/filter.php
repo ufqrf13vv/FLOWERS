@@ -6,6 +6,7 @@ function filter_callback()
 {
 
     $category_id = (int)$_REQUEST['cat_id'];
+    $cat_slug = $_REQUEST['cat_slug'];
 
     if (isset($_REQUEST['price_from'])) {
         $price_from = $_REQUEST['price_from'];
@@ -23,48 +24,61 @@ function filter_callback()
         $count = 15;
     }
 
+    $tax_query = array();
+    if (isset($_REQUEST['slug'])) {
+        $slug = $_REQUEST['slug'];
+
+        $tax_query = array(
+            'relation' => 'AND',
+            array(
+                'taxonomy' => 'product_tag',
+                'field'    => 'slug',
+                'terms'    => $slug
+            )
+        );
+    }
+
     if (isset($_REQUEST['sort'])) {
         $sort = $_REQUEST['sort'];
+
         switch ($sort) {
 //            По возрастанию цены
             case 'ASC':
                 $sort = 'ASC';
                 $orderby = '_price';
-                $tax_query = '';
                 break;
 //            По убыванию цены
             case 'DESC':
                 $sort = 'DESC';
                 $orderby = '_price';
-                $tax_query = '';
                 break;
 //            По популярности
             case 'popular':
                 $sort = 'ASC';
                 $orderby = '';
-                $tax_query = array(
-                    'taxonomy' => 'product_visibility',
-                    'field' => 'name',
-                    'terms' => 'featured',
-                    'operator' => 'IN',
-                );
+//                array_push(
+//                    $tax_query,
+//                    array(
+//                        'taxonomy' => 'product_visibility',
+//                        'field' => 'name',
+//                        'terms' => 'featured',
+//                        'operator' => 'IN',
+//                    )
+//                );
                 break;
 //            По новинкам
             case 'new':
                 $sort = 'DESC';
                 $orderby = 'date';
-                $tax_query = '';
                 break;
 //            По скидкам
             case 'sale':
                 $sort = 'ASC';
                 $orderby = '';
-                $tax_query = '';
         }
     } else {
         $sort = 'ASC';
         $orderby = 'title';
-        $tax_query = '';
     }
 
     $args = array(
@@ -77,8 +91,9 @@ function filter_callback()
                 'compare' => 'BETWEEN'
             )
         ),
-        'product_tag' => '',
         'post_type' => 'product',
+        'post_status' => 'publish',
+        'product_cat' => $cat_slug,
         'order' => $sort,
         'orderby' => $orderby,
         'tax_query' => $tax_query
@@ -115,31 +130,34 @@ function filter_callback()
                    data-product_sku=""
                    class="button product_type_simple add_to_cart_button ajax_add_to_cart catalog__item-incart">В
                     корзину</a>
-                <a href="javascript:void(0);" class="catalog__item-oneclick">Купить в 1 клик</a>
+                <a href="javascript:void(0);" class="catalog__item-oneclick one-click__link" data-title="<?php the_title(); ?>">Купить в 1 клик</a>
             </div>
         </div>
         <?php
         $i++;
     }
 
-    global $wp_query;
+    the_posts_pagination();
 
-    if ($wp_query->max_num_pages <= 1) {
-        return;
-    } else {
-        echo paginate_links_custom(apply_filters('woocommerce_pagination_args', array(
-            'base' => esc_url_raw(str_replace(999999999, '%#%', remove_query_arg('add-to-cart', get_pagenum_link(999999999, false)))),
-            'format' => '',
-            'add_args' => false,
-            'current' => max(1, get_query_var('paged')),
-            'total' => $wp_query->max_num_pages,
-            'prev_text' => '&larr;',
-            'next_text' => '&rarr;',
-            'type' => 'list',
-            'end_size' => 3,
-            'mid_size' => 3,
-        )));
-    }
+//    global $wp_query;
+//
+//    if ($wp_query->max_num_pages <= 1) {
+//        return;
+//    } else {
+//        echo paginate_links_custom(apply_filters('woocommerce_pagination_args', array(
+//            'base' => esc_url_raw(str_replace(999999999, '%#%', remove_query_arg('add-to-cart', get_pagenum_link(999999999, false)))),
+//            'format' => '',
+//            'add_args' => false,
+//            'current' => max(1, get_query_var('paged')),
+//            'total' => $wp_query->max_num_pages,
+//            'prev_text' => '&larr;',
+//            'next_text' => '&rarr;',
+//            'type' => 'list',
+//            'end_size' => 3,
+//            'mid_size' => 3,
+//        )));
+//    }
 
+    wp_reset_postdata();
     wp_die();
 }

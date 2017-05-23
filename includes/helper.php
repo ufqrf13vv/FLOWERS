@@ -188,3 +188,29 @@ function bg_color($post_id) {
 
     return $color;
 }
+
+//  Перенос заголовка
+function new_title($received_title) {
+    $title_array = explode(' ', $received_title);
+    $title = '';
+
+    foreach ($title_array as $id => $item) {
+        if ($id == 0) {
+            $title = $title . $item . '<br>';
+        } else {
+            $title = $title . ' ' . $item;
+        }
+    }
+
+    return $title;
+}
+
+//  Коротки текст отзыва
+function short_text($string) {
+    $text = strip_tags($string);
+    $text = substr($text, 0, 205);
+    $text = rtrim($text, "!,.-");
+    $text = substr($text, 0, strrpos($text, ' '));
+
+    return $text . "… ";
+}

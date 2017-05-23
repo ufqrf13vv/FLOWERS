@@ -39,16 +39,16 @@ foreach ($products->posts as $post) { ?>
 					<img src="<?php echo $thumb_url[0]; ?>" alt="<?php echo $post->post_title; ?>">
 				</div>
 				<div class="main-slider__description">
-					<div class="main-slider__header"><?php echo $post->post_title; ?></div>
+					<div class="main-slider__header"><?php echo new_title($post->post_title); ?></div>
 					<div class="main-slider__price"><?php echo $price; ?> РУБ.</div>
 					<div class="main-slider__links">
 						<a rel="nofollow" href="<?php echo get_category_link($category[0]->term_id) . '?add-to-cart=' . $post->ID; ?>"
 						   data-quantity="1"
 						   data-product_id="<?php echo $post->ID; ?>"
 						   data-product_sku=""
-						   class="button product_type_simple add_to_cart_button ajax_add_to_cart main-slider__link">В
+						   class="button product_type_simple add_to_cart_button ajax_add_to_cart main-slider__link catalog__item-incart">В
 							корзину</a>
-						<a class="main-slider__link" href="javascript:void(0);">Купить в 1 клик</a>
+						<a class="main-slider__link one-click__link" href="javascript:void(0);" data-title='<?php echo $post->post_title; ?>'>Купить в 1 клик</a>
 					</div>
 				</div>
 			</div>

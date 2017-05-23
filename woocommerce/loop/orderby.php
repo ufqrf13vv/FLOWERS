@@ -48,7 +48,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				) );
 				foreach ($tags as $tag) { ?>
 					<li>
-					<input class="catalog__filter-check" type="checkbox" name="<?php echo $tag->slug; ?>" id="<?php echo $tag->slug; ?>" value="<?php echo $tag->name; ?>">
+					<input class="catalog__filter-check" type="checkbox" name="<?php echo $tag->slug; ?>" id="<?php echo $tag->slug; ?>" value="<?php echo $tag->slug; ?>">
 					<label class="catalog__filter-label catalog__filter-label--check catalog__filter-label--check-1" for="<?php echo $tag->slug; ?>"><?php echo $tag->name; ?></label>
 				</li>
 				<?php
@@ -91,11 +91,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="catalog__filter-title">Количество показанных товаров:
 			<input class="catalog__filter-check" type="radio" id="check-15" name="count" value="15" checked>
 			<label class="catalog__filter-label catalog__filter-label--check" for="check-15">15</label>
-			<input class="catalog__filter-check" type="radio" id="check-30" name="count">
-			<label class="catalog__filter-label catalog__filter-label--check" for="check-30" value="30">30</label>
-			<input class="catalog__filter-check" type="radio" id="check-50" name="count">
-			<label class="catalog__filter-label catalog__filter-label--check" for="check-50" value="50">50</label>
+			<input class="catalog__filter-check" type="radio" id="check-30" name="count" value="30">
+			<label class="catalog__filter-label catalog__filter-label--check" for="check-30">30</label>
+			<input class="catalog__filter-check" type="radio" id="check-50" name="count" value="50">
+			<label class="catalog__filter-label catalog__filter-label--check" for="check-50">50</label>
 		</div>
 	</div>
-	<input type="hidden" name="category-id" value="<?php echo get_queried_object()->term_id; ?>">
+	<div class="hidden" id="category-attr" data-id="<?php echo get_queried_object()->term_id; ?>" data-slug="<?php echo get_queried_object()->slug; ?>"></div>
 </form>

@@ -24,6 +24,7 @@ global $product;
 if ( ! $product->is_purchasable() ) {
 	return;
 }
+//var_dump($product);
 
 echo wc_get_stock_html( $product );
 
@@ -56,8 +57,8 @@ if ( $product->is_in_stock() ) : ?>
 		?>
 
 		<div class="product__item-wrapper">
-			<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt product__item-link product__item-link--submit">В корзину</button>
-			<a class="product__item-link" href="javascript:void(0);">Купить в 1 клик</a>
+			<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="product__item-link product__item-link--submit">В корзину</button>
+			<a class="product__item-link one-click__link" href="javascript:void(0);" data-title='<?php echo $product->name; ?>'>Купить в 1 клик</a>
 		</div>
 		<?php
 			/**

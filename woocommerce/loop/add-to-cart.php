@@ -34,5 +34,5 @@ echo apply_filters( 'woocommerce_loop_add_to_cart_link',
 		esc_html( $product->add_to_cart_text() )
 	),
 $product ); ?>
-	<a href="javascript:void(0);" class="catalog__item-oneclick">Купить в 1 клик</a>
+	<a href="javascript:void(0);" class="catalog__item-oneclick one-click__link" data-title='<?php echo $product->name; ?>'>Купить в 1 клик</a>
 </div>
